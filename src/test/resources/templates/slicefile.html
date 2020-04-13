@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>springboot-thymeleaf demo</title>
+</head>
+<script src="https://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js"></script>
+
+<body>
+<input type="file" name="file" id="file">
+<button id="upload" onclick="upload()">upload</button>
+</body>
+</html>
+<script>
+    var bytesPerPiece = 1024*1024;
+    var totalPieces;
+    var upload = function(){
+        var blob = document.getElementById("file").files[0];
+        console.log("blob file:",blob);
+        var start = 0;
+        var end;
+        var index = 0;
+        var filesize = blob.size;
+        var filename = blob.name;
+        totalPieces = Math.ceil(filesize/bytesPerPiece);
+        while(start<filesize){
+            end = start+bytesPerPiece;
+            if(end>filesize){
+                end = filesize;
+            }
+
+            var chunk = blob.slice(start,end);
+            var scliceIndex = blob.name+index;
+            var formData = new FormData();
+            formData.append("file",chunk,filename);
+            formData.append("sliceIndex",scliceIndex);
+            $.ajax({
+                url:'./slice',
+                type:'POST',
+                cache:false,
+                dataType:"json",
+                data:formData,
+                processData:false,
+                contentType:false,
+                success:function (data) {
+                    console.log("--------------",data);
+                    start = end;
+                    index++;
+                },
+                error:function (e) {
+                    console.log("E",e);
+                }
+
+            });
+            start = end;
+            index++;
+        }
+    }
+</script>

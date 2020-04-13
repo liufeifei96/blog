@@ -1,9 +1,13 @@
 package com.liufei.cn;
 
-import junit.framework.TestCase;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-public class AppTest extends TestCase {
-    public void testGetHello() throws Exception {
-        assertEquals("Hello", App.getHello());
+@SpringBootApplication
+@EnableAutoConfiguration
+public class AppTest {
+    public static void main(String[] args) {
+        SpringApplication.run(AppTest.class,args);
     }
 }
